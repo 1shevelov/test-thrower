@@ -19,7 +19,11 @@
                 "selector": "default",
                 "format": ["camelCase", "PascalCase"]
             },
-
+            {
+                "selector": "classProperty",
+                "format": ["camelCase", "PascalCase"],
+                "leadingUnderscore": "allow"
+            },
             {
                 "selector": "variable",
                 "format": ["camelCase", "UPPER_CASE", "PascalCase"]

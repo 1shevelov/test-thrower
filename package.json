@@ -5,14 +5,14 @@
     "main": "src/app.js",
     "scripts": {
         "generateAssets": "node nodeScripts/GenerateAssets.js",
-        "start": "npm run generateAssets && webpack serve --config webpack/webpack.dev.js",
+        "start": "webpack serve --config webpack/webpack.dev.js",
         "build": "webpack --config webpack/webpack.prod.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "lint": "eslint . --ext .ts",
         "format": "prettier --check src/app/**",
         "format:write": "prettier --write src/app/**"
     },
-    "author": "",
+    "author": "1shevelev.github.com",
     "license": "ISC",
     "engines": {
         "node": ">=12"
@@ -21,6 +21,7 @@
         "@koreez/phaser3-ninepatch": "^2.0.2",
         "is-mobile": "^3.1.1",
         "phaser": "^3.55.2",
+        "phaser3-rex-plugins": "^1.60.2",
         "uuid": "^8.3.2"
     },
     "devDependencies": {

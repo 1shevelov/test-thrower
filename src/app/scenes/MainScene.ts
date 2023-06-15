@@ -6,6 +6,14 @@ import { PopupService } from "../services/PopupService";
 // import { GameView } from "../views/GameView";
 // import { UIView } from "../views/UIView";
 import { PlayerController } from "../components/PlayerController";
+import { Grenade } from "../components/Grenade";
+
+enum GameStates {
+    NotReady, // game is not ready
+    Ready, // listening for player input
+    Hold, // holding grenade
+    Throw, // throwing animation
+}
 
 export default class MainScene extends Phaser.Scene {
     // private gameView: GameView;
@@ -14,15 +22,32 @@ export default class MainScene extends Phaser.Scene {
     private popupService: PopupService;
 
     private playerController: PlayerController;
+    private grenade: Grenade;
+
+    private gameState: GameStates = GameStates.NotReady;
 
     public constructor() {
         super({ key: SceneNames.Main });
     }
 
     public update(): void {
-        const pointer = this.input.activePointer;
-        if (pointer.x > 0 && pointer.x < this.scale.width && pointer.y > 0 && pointer.y < this.scale.height)
-            this.playerController.throw(this.input.activePointer);
+        // player aims
+        if (this.gameState === GameStates.Hold) {
+            const pointer: Phaser.Input.Pointer = this.input.activePointer;
+            if (
+                pointer.x > 0 &&
+                pointer.x < this.scale.width &&
+                pointer.y > 0 &&
+                pointer.y < this.scale.height &&
+                pointer.isDown
+            ) {
+                this.playerController.updateDirection(this.input.activePointer);
+                if (pointer.getDuration() >= this.grenade.MaxHoldDuration) {
+                    this.grenade.throw(pointer.x, pointer.y, this.grenade.MaxHoldDuration);
+                    this.gameState = GameStates.Throw;
+                }
+            }
+        }
     }
 
     private init(): void {
@@ -31,11 +56,33 @@ export default class MainScene extends Phaser.Scene {
         // this.initUIView();
         // this.initForegroundView();
 
-        this.playerController = new PlayerController(this);
+        this.initPlayerController();
+        this.initGrenade();
 
         if (process.env.NODE_ENV !== "production") {
             this.initStatJS();
         }
+        setTimeout(() => (this.gameState = GameStates.Ready), 100);
+    }
+
+    private initPlayerController(): void {
+        this.playerController = new PlayerController(this);
+        this.input.on("pointerdown", () => {
+            if (this.gameState === GameStates.Ready) this.gameState = GameStates.Hold;
+        });
+    }
+
+    private initGrenade(): void {
+        this.grenade = new Grenade(this);
+        const playerPosition = this.playerController.getPlayerPosition();
+        this.grenade.place(playerPosition.x, playerPosition.y);
+
+        this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+            if (this.gameState === GameStates.Hold) {
+                this.grenade.throw(pointer.x, pointer.y, pointer.getDuration());
+                this.gameState = GameStates.Throw;
+            }
+        });
     }
 
     // private initGameView(): void {

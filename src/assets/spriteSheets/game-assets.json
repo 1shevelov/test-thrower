@@ -1,0 +1,40 @@
+{
+	"textures": [
+		{
+			"image": "game-assets.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 16,
+				"h": 21
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "grenade.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 10,
+						"h": 15
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 10,
+						"h": 15
+					},
+					"frame": {
+						"x": 3,
+						"y": 3,
+						"w": 10,
+						"h": 15
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://github.com/odrick/free-tex-packer-core",
+		"version": "0.3.4"
+	}
+}

@@ -12,12 +12,13 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     private preload(): void {
-        console.log("Starting Asset loading");
+        // console.log("Starting Asset loading");
         this.loadAssets();
         this.loadSpriteSheets();
         // this.loadAudio();
         // this.loadSpines();
         // this.loadShaders();
+        this.load.atlas("Flares", "assets/uncompressed/flares.png", "assets/jsons/flares.json");
     }
 
     private init(): void {
@@ -25,7 +26,7 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     private create(): void {
-        console.log("Asset loading is completed");
+        // console.log("Asset loading is completed");
         this.scene.start(SceneNames.Main);
     }
 

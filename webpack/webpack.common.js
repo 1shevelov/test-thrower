@@ -51,6 +51,7 @@ module.exports = {
                 // { from: "./src/assets/audio", to: "assets/audio" },
                 { from: "./src/assets/uncompressed", to: "assets/uncompressed" },
                 { from: "./src/assets/spriteSheets", to: "assets/spriteSheets" },
+                { from: "./src/assets/jsons", to: "assets/jsons" },
                 // PLEASE UNCOMMENT THESE, IF YOU NEED THEM
                 // { from: "./src/assets/spines", to: "assets/spines" },
                 // { from: "./src/assets/shaders", to: "assets/shaders" },
