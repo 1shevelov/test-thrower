@@ -1,0 +1,292 @@
+{
+	"textures": [
+		{
+			"image": "buttons.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 525,
+				"h": 564
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "bkg.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 330,
+						"h": 330
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 330,
+						"h": 330
+					},
+					"frame": {
+						"x": 3,
+						"y": 3,
+						"w": 330,
+						"h": 330
+					}
+				},
+				{
+					"filename": "sell/disabled.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 143,
+						"h": 144
+					},
+					"frame": {
+						"x": 339,
+						"y": 3,
+						"w": 143,
+						"h": 144
+					}
+				},
+				{
+					"filename": "sell/down.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 144
+					},
+					"frame": {
+						"x": 3,
+						"y": 339,
+						"w": 144,
+						"h": 144
+					}
+				},
+				{
+					"filename": "sell/over.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 144
+					},
+					"frame": {
+						"x": 153,
+						"y": 339,
+						"w": 144,
+						"h": 144
+					}
+				},
+				{
+					"filename": "sell/up.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 144
+					},
+					"frame": {
+						"x": 303,
+						"y": 339,
+						"w": 144,
+						"h": 144
+					}
+				},
+				{
+					"filename": "sell-checkmark.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 138,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 138,
+						"h": 108
+					},
+					"frame": {
+						"x": 339,
+						"y": 153,
+						"w": 138,
+						"h": 108
+					}
+				},
+				{
+					"filename": "blue/disabled.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 488,
+						"y": 3,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "blue/down.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 488,
+						"y": 81,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "blue/over.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 483,
+						"y": 159,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "blue/up.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 483,
+						"y": 237,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "red/down.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 453,
+						"y": 315,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "red/over.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 453,
+						"y": 393,
+						"w": 34,
+						"h": 72
+					}
+				},
+				{
+					"filename": "red/up.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 72
+					},
+					"frame": {
+						"x": 3,
+						"y": 489,
+						"w": 34,
+						"h": 72
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://github.com/odrick/free-tex-packer-core",
+		"version": "0.3.4"
+	}
+}
