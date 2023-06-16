@@ -95,10 +95,10 @@ export class Grenade {
         this.sprite.setVisible(false);
         const blastRadius = this.getBlastRadius();
         const blastArea = new Phaser.Geom.Rectangle(
-            this.sprite.x - blastRadius * 0.75,
-            this.sprite.y - blastRadius * 0.75,
-            blastRadius * 1.5,
-            blastRadius * 1.5,
+            this.sprite.x - blastRadius * 1.5,
+            this.sprite.y - blastRadius * 1.5,
+            blastRadius * 3,
+            blastRadius * 3,
         );
         const blastCircle = this.mainScene.add.graphics();
         blastCircle.fillStyle(0xff0000, 0.2);
@@ -137,7 +137,7 @@ export class Grenade {
             targets: blastCircle,
             alpha: 0,
             ease: "Linear",
-            duration: this.blastAnimationDuration * 3,
+            duration: this.blastAnimationDuration * 2,
             repeat: 0,
             yoyo: false,
             onComplete: () => {
