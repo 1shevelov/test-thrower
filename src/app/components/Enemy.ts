@@ -3,7 +3,7 @@
 import { IBlastResult, GameEvents } from "../scenes/MainScene";
 
 export class Enemy {
-    private readonly StartHp = 30;
+    private readonly StartHp = 80;
     private readonly DeathAnimationDuration = 1200;
     private readonly Position = new Phaser.Math.Vector2(400, 300);
 
@@ -13,6 +13,7 @@ export class Enemy {
     private gameEvents: Phaser.Events.EventEmitter;
 
     private sprite: Phaser.GameObjects.Sprite;
+    private hpBar: Phaser.GameObjects.Container;
 
     public constructor(scene: Phaser.Scene, events: Phaser.Events.EventEmitter) {
         // type: EnemyTypes) {
@@ -20,6 +21,7 @@ export class Enemy {
         this.mainScene = scene;
         this.init();
         this.create();
+        this.createHpBar();
     }
 
     private receiveDamage(blastResult: IBlastResult): void {
@@ -32,13 +34,29 @@ export class Enemy {
             blastResult.maxDamage * (1 - distance / (blastResult.radius + this.sprite.displayWidth / 2)),
         );
         this.hp -= damage;
+        if (this.hp < 0) this.hp = 0;
+        this.updateBar();
         if (this.hp <= 0) {
-            this.hp = 0;
             this.die();
             return;
         }
         console.log(`enemy received ${damage} damage, hp left: ${this.hp}`);
         this.gameEvents.emit(GameEvents.EnemyReady);
+    }
+
+    private updateBar(): void {
+        const hpPart = this.hp / this.StartHp;
+        console.log(`hpPart: ${hpPart}`);
+        const bar = this.hpBar.getByName("bar") as Phaser.GameObjects.Graphics;
+        bar.clear();
+        bar.fillStyle(0x00ff00, 1);
+        const frame = this.hpBar.getByName("frame") as Phaser.GameObjects.Sprite;
+        bar.fillRect(
+            -frame.displayWidth / 2,
+            -frame.displayHeight / 2,
+            frame.displayWidth * hpPart,
+            frame.displayHeight,
+        );
     }
 
     private init(): void {
@@ -94,9 +112,31 @@ export class Enemy {
 
     private reset(): void {
         this.hp = this.StartHp;
+        this.updateBar();
         this.sprite.setAlpha(1);
         this.sprite.setPosition(this.Position.x, this.Position.y);
         this.sprite.play("walk");
         this.gameEvents.emit(GameEvents.EnemyReady);
+    }
+
+    private createHpBar(): void {
+        this.hpBar = new Phaser.GameObjects.Container(this.mainScene, 0, 0);
+
+        const frame = this.mainScene.add.sprite(0, 0, "game-ui", "hp-bar.png");
+        frame.setOrigin(0.5, 0.5);
+        // frame.setScale(2.0);
+        // frame.setVisible(false);
+        frame.setName("frame");
+        this.hpBar.add(frame);
+
+        const bar = this.mainScene.add.graphics();
+        bar.fillStyle(0x00ff00, 1);
+        bar.fillRect(-frame.displayWidth / 2, -frame.displayHeight / 2, frame.displayWidth, frame.displayHeight);
+        // bar.setVisible(false);
+        bar.setName("bar");
+        this.hpBar.add(bar);
+
+        this.hpBar.setPosition(this.sprite.x - frame.displayWidth / 2, this.sprite.y - this.sprite.displayHeight / 5);
+        this.mainScene.add.existing(this.hpBar);
     }
 }

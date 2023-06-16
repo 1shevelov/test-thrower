@@ -52,6 +52,27 @@
 					}
 				},
 				{
+					"filename": "hp-bar.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 104,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 104,
+						"h": 24
+					},
+					"frame": {
+						"x": 159,
+						"y": 126,
+						"w": 104,
+						"h": 24
+					}
+				},
+				{
 					"filename": "runner.png",
 					"rotated": false,
 					"trimmed": false,
