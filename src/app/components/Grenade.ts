@@ -1,28 +1,36 @@
 // import { GrenadeTypes } from "../configs/Entities";
 import PathFollower from "phaser3-rex-plugins/plugins/pathfollower.js";
+import { IBlastResult, GameEvents } from "../scenes/MainScene";
 
 export class Grenade {
-    public readonly MaxHoldDuration = 3000; // 3 seconds
-    public readonly blastRadiusMult = 0.3;
+    public readonly MaxHoldDuration = 2500; // 3 seconds
+    public readonly MaxDamage = 60;
 
     private readonly throwAnimationDuration = 1500; // 1 second
     private readonly blastAnimationDuration = 1000; // 1 second
     // private blastEffect: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    private readonly BlastRadiusMult = 0.15; // blast diameter is 30% of screen width
+
     private maxTrajectoryLength: number;
 
     private mainScene: Phaser.Scene;
+    private gameEvents: Phaser.Events.EventEmitter;
+
+    private position = new Phaser.Math.Vector2(0, 0);
     private sprite: Phaser.GameObjects.Sprite;
 
-    public constructor(scene: Phaser.Scene) {
+    public constructor(scene: Phaser.Scene, events: Phaser.Events.EventEmitter) {
         //type: GrenadeTypes) {
         //console.log(`Grenade of type ${type} created `);
         this.mainScene = scene;
+        this.gameEvents = events;
         this.init();
         this.create();
     }
 
     public place(x: number, y: number): void {
+        this.position.set(x, y);
         this.sprite.setPosition(x, y);
         this.sprite.setVisible(true);
     }
@@ -46,9 +54,6 @@ export class Grenade {
             y - (y - this.sprite.y) / 6,
         );
         // console.log(`end points: ${this.sprite.x}, ${this.sprite.y} and ${x}, ${y}`);
-        // console.log(
-        //     `control points: ${controlPoint1.x}, ${controlPoint1.y} and ${controlPoint2.x}, ${controlPoint2.y}`,
-        // );
         // debug of bezier curve
         // const controlPoints = this.mainScene.add.graphics();
         // controlPoints.fillStyle(0xff0000, 1);
@@ -71,13 +76,24 @@ export class Grenade {
             yoyo: false,
             onComplete: () => {
                 this.detonate();
+                const blastResult: IBlastResult = {
+                    x: x,
+                    y: y,
+                    radius: this.getBlastRadius(),
+                    maxDamage: this.MaxDamage,
+                };
+                this.gameEvents.emit(GameEvents.GrenadeBlast, blastResult);
             },
         });
     }
 
-    public detonate(): void {
+    private getBlastRadius(): number {
+        return this.mainScene.scale.gameSize.width * this.BlastRadiusMult;
+    }
+
+    private detonate(): void {
         this.sprite.setVisible(false);
-        const blastRadius = this.mainScene.scale.gameSize.width * this.blastRadiusMult;
+        const blastRadius = this.getBlastRadius();
         const blastArea = new Phaser.Geom.Rectangle(
             this.sprite.x - blastRadius * 0.75,
             this.sprite.y - blastRadius * 0.75,
@@ -126,6 +142,7 @@ export class Grenade {
             yoyo: false,
             onComplete: () => {
                 blastCircle.destroy();
+                this.reset();
             },
         });
     }
@@ -140,5 +157,12 @@ export class Grenade {
         this.sprite.setScale(5);
         this.sprite.setVisible(false);
         this.mainScene.add.existing(this.sprite);
+    }
+
+    private reset(): void {
+        this.sprite.setRotation(0);
+        this.sprite.setVisible(true);
+        this.sprite.setPosition(this.position.x, this.position.y);
+        this.gameEvents.emit(GameEvents.GrenadeReset);
     }
 }

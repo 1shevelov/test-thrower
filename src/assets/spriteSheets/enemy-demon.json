@@ -1,0 +1,271 @@
+{
+	"textures": [
+		{
+			"image": "enemy-demon.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 352,
+				"h": 342
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "Walk3.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 95,
+						"w": 79,
+						"h": 92
+					},
+					"frame": {
+						"x": 3,
+						"y": 3,
+						"w": 79,
+						"h": 92
+					}
+				},
+				{
+					"filename": "Walk5.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 95,
+						"w": 83,
+						"h": 92
+					},
+					"frame": {
+						"x": 88,
+						"y": 3,
+						"w": 83,
+						"h": 92
+					}
+				},
+				{
+					"filename": "Death4.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 86,
+						"y": 124,
+						"w": 91,
+						"h": 61
+					},
+					"frame": {
+						"x": 3,
+						"y": 101,
+						"w": 91,
+						"h": 61
+					}
+				},
+				{
+					"filename": "Walk2.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 96,
+						"w": 79,
+						"h": 91
+					},
+					"frame": {
+						"x": 3,
+						"y": 168,
+						"w": 79,
+						"h": 91
+					}
+				},
+				{
+					"filename": "Walk1.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 97,
+						"w": 81,
+						"h": 90
+					},
+					"frame": {
+						"x": 88,
+						"y": 168,
+						"w": 81,
+						"h": 90
+					}
+				},
+				{
+					"filename": "Walk6.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 98,
+						"w": 80,
+						"h": 89
+					},
+					"frame": {
+						"x": 177,
+						"y": 3,
+						"w": 80,
+						"h": 89
+					}
+				},
+				{
+					"filename": "Walk4.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 99,
+						"w": 72,
+						"h": 88
+					},
+					"frame": {
+						"x": 177,
+						"y": 98,
+						"w": 72,
+						"h": 88
+					}
+				},
+				{
+					"filename": "Death3.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 79,
+						"y": 110,
+						"w": 86,
+						"h": 75
+					},
+					"frame": {
+						"x": 263,
+						"y": 3,
+						"w": 86,
+						"h": 75
+					}
+				},
+				{
+					"filename": "Death5.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 91,
+						"y": 157,
+						"w": 86,
+						"h": 31
+					},
+					"frame": {
+						"x": 263,
+						"y": 84,
+						"w": 86,
+						"h": 31
+					}
+				},
+				{
+					"filename": "Death1.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 77,
+						"y": 102,
+						"w": 76,
+						"h": 85
+					},
+					"frame": {
+						"x": 255,
+						"y": 121,
+						"w": 76,
+						"h": 85
+					}
+				},
+				{
+					"filename": "Death6.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 93,
+						"y": 141,
+						"w": 84,
+						"h": 46
+					},
+					"frame": {
+						"x": 175,
+						"y": 212,
+						"w": 84,
+						"h": 46
+					}
+				},
+				{
+					"filename": "Death2.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 77,
+						"y": 110,
+						"w": 81,
+						"h": 74
+					},
+					"frame": {
+						"x": 3,
+						"y": 265,
+						"w": 81,
+						"h": 74
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://github.com/odrick/free-tex-packer-core",
+		"version": "0.3.4"
+	}
+}

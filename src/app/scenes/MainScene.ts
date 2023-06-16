@@ -7,6 +7,20 @@ import { PopupService } from "../services/PopupService";
 // import { UIView } from "../views/UIView";
 import { PlayerController } from "../components/PlayerController";
 import { Grenade } from "../components/Grenade";
+import { Enemy } from "../components/Enemy";
+
+export interface IBlastResult {
+    x: number;
+    y: number;
+    radius: number;
+    maxDamage: number;
+}
+
+export enum GameEvents {
+    GrenadeBlast = "GrenadeBlast",
+    GrenadeReset = "GrenadeReset",
+    EnemyDied = "EnemyDied",
+}
 
 enum GameStates {
     NotReady, // game is not ready
@@ -23,8 +37,10 @@ export default class MainScene extends Phaser.Scene {
 
     private playerController: PlayerController;
     private grenade: Grenade;
+    private enemy: Enemy;
 
     private gameState: GameStates = GameStates.NotReady;
+    private gameEvents: Phaser.Events.EventEmitter;
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -51,6 +67,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private init(): void {
+        this.gameEvents = new Phaser.Events.EventEmitter();
         this.initServices();
         // this.initGameView();
         // this.initUIView();
@@ -58,6 +75,7 @@ export default class MainScene extends Phaser.Scene {
 
         this.initPlayerController();
         this.initGrenade();
+        this.enemy = new Enemy(this, this.gameEvents);
 
         if (process.env.NODE_ENV !== "production") {
             this.initStatJS();
@@ -73,7 +91,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private initGrenade(): void {
-        this.grenade = new Grenade(this);
+        this.grenade = new Grenade(this, this.gameEvents);
         const playerPosition = this.playerController.getPlayerPosition();
         this.grenade.place(playerPosition.x, playerPosition.y);
 
@@ -83,6 +101,12 @@ export default class MainScene extends Phaser.Scene {
                 this.gameState = GameStates.Throw;
             }
         });
+        this.gameEvents.on(GameEvents.GrenadeReset, () => this.reset());
+    }
+
+    private reset(): void {
+        this.gameState = GameStates.Ready;
+        console.log("ready!");
     }
 
     // private initGameView(): void {
