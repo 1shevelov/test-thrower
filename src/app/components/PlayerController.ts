@@ -5,7 +5,7 @@ export class PlayerController {
         color: 0x00ff00,
         alpha: 1,
     };
-    private readonly ThrowDirectionLength = 250;
+    private readonly ThrowDirectionLength = 200;
     private playerPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     private readonly playerPositionMult: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0.5, 0.9);
 
