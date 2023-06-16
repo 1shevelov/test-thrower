@@ -35,8 +35,10 @@ export class Enemy {
         if (this.hp <= 0) {
             this.hp = 0;
             this.die();
+            return;
         }
         console.log(`enemy received ${damage} damage, hp left: ${this.hp}`);
+        this.gameEvents.emit(GameEvents.EnemyReady);
     }
 
     private init(): void {
@@ -83,7 +85,7 @@ export class Enemy {
                 alpha: 0,
                 duration: 500,
                 onComplete: () => {
-                    this.gameEvents.emit(GameEvents.EnemyDied);
+                    // this.gameEvents.emit(GameEvents.EnemyDied);
                     this.reset();
                 },
             });
@@ -95,5 +97,6 @@ export class Enemy {
         this.sprite.setAlpha(1);
         this.sprite.setPosition(this.Position.x, this.Position.y);
         this.sprite.play("walk");
+        this.gameEvents.emit(GameEvents.EnemyReady);
     }
 }

@@ -4,7 +4,7 @@ import { SceneNames } from "../enums/Scenes";
 import { PopupService } from "../services/PopupService";
 // import { ForegroundView } from "../views/ForegroundView";
 // import { GameView } from "../views/GameView";
-// import { UIView } from "../views/UIView";
+import { UIView } from "../views/UIView";
 import { PlayerController } from "../components/PlayerController";
 import { Grenade } from "../components/Grenade";
 import { Enemy } from "../components/Enemy";
@@ -19,6 +19,7 @@ export interface IBlastResult {
 export enum GameEvents {
     GrenadeBlast = "GrenadeBlast",
     GrenadeReset = "GrenadeReset",
+    EnemyReady = "EnemyReady",
     EnemyDied = "EnemyDied",
 }
 
@@ -31,7 +32,7 @@ enum GameStates {
 
 export default class MainScene extends Phaser.Scene {
     // private gameView: GameView;
-    // private uiView: UIView;
+    private uiView: UIView;
     // private foregroundView: ForegroundView;
     private popupService: PopupService;
 
@@ -41,6 +42,11 @@ export default class MainScene extends Phaser.Scene {
 
     private gameState: GameStates = GameStates.NotReady;
     private gameEvents: Phaser.Events.EventEmitter;
+
+    private entitiesReadyStatus = {
+        grenade: false,
+        enemy: false,
+    };
 
     public constructor() {
         super({ key: SceneNames.Main });
@@ -62,6 +68,7 @@ export default class MainScene extends Phaser.Scene {
                     this.grenade.throw(pointer.x, pointer.y, this.grenade.MaxHoldDuration);
                     this.gameState = GameStates.Throw;
                 }
+                this.uiView.updateHoldTimer(pointer.getDuration() / this.grenade.MaxHoldDuration);
             }
         }
     }
@@ -70,30 +77,43 @@ export default class MainScene extends Phaser.Scene {
         this.gameEvents = new Phaser.Events.EventEmitter();
         this.initServices();
         // this.initGameView();
-        // this.initUIView();
         // this.initForegroundView();
-
         this.initPlayerController();
+        this.initUIView();
         this.initGrenade();
-        this.enemy = new Enemy(this, this.gameEvents);
+        this.initEnemy();
 
         if (process.env.NODE_ENV !== "production") {
             this.initStatJS();
         }
-        setTimeout(() => (this.gameState = GameStates.Ready), 100);
+        // setTimeout(() => (this.gameState = GameStates.Ready), 100);
+        this.gameState = GameStates.Ready;
+    }
+
+    private initEnemy(): void {
+        this.enemy = new Enemy(this, this.gameEvents);
+
+        this.gameEvents.on(GameEvents.EnemyReady, () => {
+            this.entitiesReadyStatus.enemy = true;
+            this.reset();
+            return;
+        });
+        this.entitiesReadyStatus.enemy = true;
     }
 
     private initPlayerController(): void {
         this.playerController = new PlayerController(this);
+
         this.input.on("pointerdown", () => {
             if (this.gameState === GameStates.Ready) this.gameState = GameStates.Hold;
+            this.entitiesReadyStatus.grenade = false;
+            this.entitiesReadyStatus.enemy = false;
         });
     }
 
     private initGrenade(): void {
         this.grenade = new Grenade(this, this.gameEvents);
-        const playerPosition = this.playerController.getPlayerPosition();
-        this.grenade.place(playerPosition.x, playerPosition.y);
+        if (this.playerController) this.grenade.setPosition(this.playerController.getPlayerPosition());
 
         this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
             if (this.gameState === GameStates.Hold) {
@@ -101,12 +121,20 @@ export default class MainScene extends Phaser.Scene {
                 this.gameState = GameStates.Throw;
             }
         });
-        this.gameEvents.on(GameEvents.GrenadeReset, () => this.reset());
+        this.gameEvents.on(GameEvents.GrenadeReset, () => {
+            this.entitiesReadyStatus.grenade = true;
+            this.reset();
+            return;
+        });
+        this.entitiesReadyStatus.grenade = true;
     }
 
     private reset(): void {
-        this.gameState = GameStates.Ready;
-        console.log("ready!");
+        if (this.entitiesReadyStatus.grenade && this.entitiesReadyStatus.enemy) {
+            this.gameState = GameStates.Ready;
+            this.uiView.reset();
+            // console.log("ready!");
+        }
     }
 
     // private initGameView(): void {
@@ -114,10 +142,11 @@ export default class MainScene extends Phaser.Scene {
     //     this.add.existing(this.gameView);
     // }
 
-    // private initUIView(): void {
-    //     this.uiView = new UIView(this);
-    //     this.add.existing(this.uiView);
-    // }
+    private initUIView(): void {
+        this.uiView = new UIView(this);
+        this.add.existing(this.uiView);
+        // if (this.playerController) this.uiView.positionThrowHelper(this.playerController.getPlayerPosition());
+    }
 
     // private initForegroundView(): void {
     //     this.foregroundView = new ForegroundView(this);

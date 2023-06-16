@@ -5,7 +5,7 @@
 			"format": "RGBA8888",
 			"size": {
 				"w": 406,
-				"h": 123
+				"h": 199
 			},
 			"scale": 1,
 			"frames": [
@@ -28,6 +28,48 @@
 						"y": 3,
 						"w": 400,
 						"h": 117
+					}
+				},
+				{
+					"filename": "throw-helper.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 150,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 150,
+						"h": 27
+					},
+					"frame": {
+						"x": 3,
+						"y": 126,
+						"w": 150,
+						"h": 27
+					}
+				},
+				{
+					"filename": "runner.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 4,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 4,
+						"h": 37
+					},
+					"frame": {
+						"x": 3,
+						"y": 159,
+						"w": 4,
+						"h": 37
 					}
 				}
 			]

@@ -17,7 +17,7 @@ export class Grenade {
     private mainScene: Phaser.Scene;
     private gameEvents: Phaser.Events.EventEmitter;
 
-    private position = new Phaser.Math.Vector2(0, 0);
+    private startingPosition = new Phaser.Math.Vector2(0, 0);
     private sprite: Phaser.GameObjects.Sprite;
 
     public constructor(scene: Phaser.Scene, events: Phaser.Events.EventEmitter) {
@@ -29,9 +29,9 @@ export class Grenade {
         this.create();
     }
 
-    public place(x: number, y: number): void {
-        this.position.set(x, y);
-        this.sprite.setPosition(x, y);
+    public setPosition(playerPos: Phaser.Math.Vector2): void {
+        this.startingPosition.set(playerPos.x, playerPos.y);
+        this.sprite.setPosition(playerPos.x, playerPos.y);
         this.sprite.setVisible(true);
     }
 
@@ -162,7 +162,7 @@ export class Grenade {
     private reset(): void {
         this.sprite.setRotation(0);
         this.sprite.setVisible(true);
-        this.sprite.setPosition(this.position.x, this.position.y);
+        this.sprite.setPosition(this.startingPosition.x, this.startingPosition.y);
         this.gameEvents.emit(GameEvents.GrenadeReset);
     }
 }
