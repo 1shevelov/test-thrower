@@ -11,6 +11,8 @@ export class Enemy {
     // };
     private readonly ShowHideAnimationDuration = 500;
     private readonly DeathAnimationDuration = 1200;
+
+    // screen area where the enemy can appear
     private readonly PositionAreaMult = {
         xMin: 0.1,
         xMax: 0.9,
@@ -36,6 +38,8 @@ export class Enemy {
         this.reset();
     }
 
+    // position the enemy randomly within the specific area
+    // and send ready event to the main scene
     private randomlyPlace(): void {
         const { width, height } = this.mainScene.scale.gameSize;
         const x = Phaser.Math.Between(this.PositionAreaMult.xMin * width, this.PositionAreaMult.xMax * width);
@@ -54,6 +58,8 @@ export class Enemy {
         });
     }
 
+    // receive damage from blast parameters
+    // update the HP bar and die if HP is 0
     private receiveDamage(blastResult: IBlastResult): void {
         const distance = Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, blastResult.x, blastResult.y);
         if (distance > blastResult.radius + this.sprite.displayWidth / 2) {
@@ -66,16 +72,16 @@ export class Enemy {
         );
         this.hp -= damage;
         if (this.hp < 0) this.hp = 0;
-        this.updateBar();
+        this.updateHpBar();
         if (this.hp <= 0) {
             this.die();
             return;
         }
-        console.log(`enemy received ${damage} damage, hp left: ${this.hp}`);
+        // console.log(`enemy received ${damage} damage, hp left: ${this.hp}`);
         this.gameEvents.emit(GameEvents.EnemyReady);
     }
 
-    private updateBar(): void {
+    private updateHpBar(): void {
         const hpPart = this.hp / this.StartHp;
         // console.log(`hpPart: ${hpPart}`);
         const bar = this.hpBar.getByName("bar") as Phaser.GameObjects.Graphics;
@@ -91,7 +97,7 @@ export class Enemy {
     }
 
     private init(): void {
-        this.gameEvents.on(GameEvents.GrenadeBlast, this.receiveDamage, this);
+        this.gameEvents.on(GameEvents.GrenadeBlasted, this.receiveDamage, this);
         // this.hp = this.StartHp;
     }
 
@@ -128,6 +134,8 @@ export class Enemy {
         this.sprite.setVisible(false);
     }
 
+    // play die animation
+    // then reset the enemy
     private die(): void {
         this.sprite.play("death");
         this.hpBar.setVisible(false);
@@ -144,10 +152,8 @@ export class Enemy {
         }, this.DeathAnimationDuration);
     }
 
+    // reset the sprite after dying and on init, show in new position and restore hp
     private reset(): void {
-        // this.sprite.setAlpha(1);
-        // this.sprite.setPosition(this.Position.x, this.Position.y);
-        // this.sprite.play("walk");
         this.sprite.setFrame("Walk1.png");
         this.randomlyPlace();
         this.hp = this.StartHp; // Phaser.Math.Between(this.StartHp.min, this.StartHp.max);
@@ -155,7 +161,7 @@ export class Enemy {
     }
 
     private showHpBar(): void {
-        this.updateBar();
+        this.updateHpBar();
         const frame = this.hpBar.getByName("frame") as Phaser.GameObjects.Sprite;
         this.hpBar.setPosition(this.sprite.x - frame.displayWidth / 2, this.sprite.y - this.sprite.displayHeight / 5);
         this.hpBar.setVisible(true);

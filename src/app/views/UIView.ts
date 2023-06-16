@@ -15,6 +15,7 @@ export class UIView extends Phaser.GameObjects.Container {
         this.reset();
     }
 
+    // while player aims
     public updateHoldTimer(timePart: number): void {
         if (Number.isNaN(timePart) || timePart < 0) timePart = 0;
         if (timePart > 1) timePart = 1;

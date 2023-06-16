@@ -16,6 +16,7 @@ export class PlayerController {
         this.init();
     }
 
+    // while player aims
     public updateDirection(pointer: Phaser.Input.Pointer): void {
         const angle = Phaser.Math.Angle.Between(this.playerPosition.x, this.playerPosition.y, pointer.x, pointer.y);
         if (angle < 0 && angle > -Math.PI) {
@@ -39,6 +40,7 @@ export class PlayerController {
         this.drawThrowDirection(this.playerPosition.x, this.playerPosition.y - this.ThrowDirectionLength);
     }
 
+    // show line in the direction of the pointer
     private drawThrowDirection(endPosX: number, endPosY: number): void {
         this.throwDirection = this.mainScene.add.graphics();
         this.throwDirection.lineStyle(

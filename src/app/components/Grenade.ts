@@ -9,8 +9,9 @@ export class Grenade {
     private readonly throwAnimationDuration = 1500; // 1 second
     private readonly blastAnimationDuration = 1000; // 1 second
     // private blastEffect: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particles: any; // Phaser.GameObjects.GameObjectFactory.Particles;
 
-    private readonly BlastRadiusMult = 0.15; // blast diameter is 30% of screen width
+    private readonly BlastRadiusMult = 0.1; // blast diameter is 20% of screen width
 
     private maxTrajectoryLength: number;
 
@@ -26,18 +27,19 @@ export class Grenade {
         this.mainScene = scene;
         this.gameEvents = events;
         this.init();
-        this.create();
+        this.createSprite();
     }
 
-    public setPosition(playerPos: Phaser.Math.Vector2): void {
+    public setStartingPosition(playerPos: Phaser.Math.Vector2): void {
         this.startingPosition.set(playerPos.x, playerPos.y);
-        this.sprite.setPosition(playerPos.x, playerPos.y);
-        this.sprite.setVisible(true);
+        // this.sprite.setPosition(playerPos.x, playerPos.y);
+        this.reset();
     }
 
-    // TODO: if pointerY > playerY (pointer below grenade), then grenade detonates in hands killing the player
+    // calculate blast center and animate flying grenade
+    // send blast parameters to the enemy
     public throw(pointerX: number, pointerY: number, holdDuration: number): void {
-        console.log(`throwing grenade towards ${pointerX}, ${pointerY} with hold duration ${holdDuration}`);
+        // console.log(`throwing grenade towards ${pointerX}, ${pointerY} with hold duration ${holdDuration}`);
         const angle = Phaser.Math.Angle.Between(this.sprite.x, this.sprite.y, pointerX, pointerY);
         const throwLength = (holdDuration / this.MaxHoldDuration) * this.maxTrajectoryLength;
         const x = this.sprite.x + throwLength * Math.cos(angle);
@@ -82,27 +84,29 @@ export class Grenade {
                     radius: this.getBlastRadius(),
                     maxDamage: this.MaxDamage,
                 };
-                this.gameEvents.emit(GameEvents.GrenadeBlast, blastResult);
+                this.gameEvents.emit(GameEvents.GrenadeBlasted, blastResult);
             },
         });
     }
 
+    // adjusted for screen size
     private getBlastRadius(): number {
         return this.mainScene.scale.gameSize.width * this.BlastRadiusMult;
     }
 
+    // show blast visuals and reset grenade on completion
     private detonate(): void {
         this.sprite.setVisible(false);
         const blastRadius = this.getBlastRadius();
         const blastArea = new Phaser.Geom.Rectangle(
-            this.sprite.x - blastRadius * 1.5,
-            this.sprite.y - blastRadius * 1.5,
-            blastRadius * 3,
-            blastRadius * 3,
+            this.sprite.x - blastRadius * 2,
+            this.sprite.y - blastRadius * 2,
+            blastRadius * 4,
+            blastRadius * 4,
         );
         const blastCircle = this.mainScene.add.graphics();
-        blastCircle.fillStyle(0xff0000, 0.2);
-        blastCircle.fillCircle(this.sprite.x, this.sprite.y, blastRadius / 2);
+        blastCircle.fillStyle(0xff0000, 0.3);
+        blastCircle.fillCircle(this.sprite.x, this.sprite.y, blastRadius);
         // TODO: Is it possible to create at init and only activate here?
         // this.mainScene.add.particles("Flares", {
         //     frame: ["red", "blue", "green", "yellow"],
@@ -118,8 +122,7 @@ export class Grenade {
         //     x: this.sprite.x,
         //     y: this.sprite.y,
         // });
-        const particles = this.mainScene.add.particles("Flares");
-        particles.createEmitter({
+        this.particles.createEmitter({
             frame: ["red", "blue", "green", "yellow"],
             lifespan: this.blastAnimationDuration,
             speed: { min: 100, max: 200 },
@@ -149,9 +152,10 @@ export class Grenade {
 
     private init(): void {
         this.maxTrajectoryLength = 0.7 * this.mainScene.scale.gameSize.height;
+        this.particles = this.mainScene.add.particles("Flares");
     }
 
-    private create(): void {
+    private createSprite(): void {
         this.sprite = new Phaser.GameObjects.Sprite(this.mainScene, 0, 0, "game-assets", "grenade.png");
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setScale(5);
@@ -159,10 +163,11 @@ export class Grenade {
         this.mainScene.add.existing(this.sprite);
     }
 
+    // reset after the blast and on init
     private reset(): void {
         this.sprite.setRotation(0);
         this.sprite.setVisible(true);
         this.sprite.setPosition(this.startingPosition.x, this.startingPosition.y);
-        this.gameEvents.emit(GameEvents.GrenadeReset);
+        this.gameEvents.emit(GameEvents.GrenadeReady);
     }
 }
