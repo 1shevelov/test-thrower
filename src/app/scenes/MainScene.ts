@@ -4,7 +4,7 @@ import { SceneNames } from "../enums/Scenes";
 // import { PopupService } from "../services/PopupService";
 // import { ForegroundView } from "../views/ForegroundView";
 import { UIView } from "../views/UIView";
-import { PlayerController } from "../components/PlayerController";
+import { PlayerController, PlayerEvents } from "../components/PlayerController";
 import { Grenade } from "../components/Grenade";
 import { Enemy } from "../components/Enemy";
 
@@ -55,25 +55,11 @@ export default class MainScene extends Phaser.Scene {
     public update(): void {
         // console.log(this.gameState, this.entitiesReadyStatus);
         // player aims
-        if (this.gameState === GameStates.Hold) {
-            const pointer: Phaser.Input.Pointer = this.input.activePointer;
-            if (
-                // check if pointer is within the game area
-                pointer.x > 0 &&
-                pointer.x < this.scale.width &&
-                pointer.y > 0 &&
-                pointer.y < this.scale.height &&
-                pointer.isDown
-            ) {
-                this.playerController.updateDirection(this.input.activePointer);
-                // release the grenade if holding for too long
-                if (pointer.getDuration() >= this.grenade.MaxHoldDuration) {
-                    this.grenade.throw(pointer.x, pointer.y, this.grenade.MaxHoldDuration);
-                    this.gameState = GameStates.Throw;
-                }
-                this.uiView.updateHoldTimer(pointer.getDuration() / this.grenade.MaxHoldDuration);
-            }
-        }
+        if (this.gameState === GameStates.Hold)
+            this.playerController.holdingGrenade(
+                this.grenade.MaxHoldDuration,
+                this.uiView.updateOnHold.bind(this.uiView),
+            );
     }
 
     private init(): void {
@@ -98,32 +84,34 @@ export default class MainScene extends Phaser.Scene {
         this.gameEvents.on(GameEvents.EnemyReady, () => {
             this.entitiesReadyStatus.enemy = true;
             this.reset();
-            return;
+            if (this.uiView) this.uiView.resetDirectionLine();
         });
     }
 
     private initPlayerController(): void {
         this.playerController = new PlayerController(this);
+        const playerEvents = this.playerController.getEvents();
 
         // initialization of aim and hold
-        this.input.on("pointerdown", () => {
+        playerEvents.on(PlayerEvents.PointerDown, () => {
             if (this.gameState !== GameStates.Ready) return;
             this.gameState = GameStates.Hold;
             this.entitiesReadyStatus.grenade = false;
             this.entitiesReadyStatus.enemy = false;
+        });
+
+        // throwing the grenade
+        playerEvents.on(PlayerEvents.PointerUp, (pointer: Phaser.Input.Pointer) => {
+            if (this.gameState === GameStates.Hold) {
+                if (this.grenade) this.grenade.throw(pointer.x, pointer.y, pointer.getDuration());
+                this.gameState = GameStates.Throw;
+            }
         });
     }
 
     private initGrenade(): void {
         this.grenade = new Grenade(this, this.gameEvents);
 
-        // throwing the grenade
-        this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
-            if (this.gameState === GameStates.Hold) {
-                this.grenade.throw(pointer.x, pointer.y, pointer.getDuration());
-                this.gameState = GameStates.Throw;
-            }
-        });
         this.gameEvents.on(GameEvents.GrenadeReady, () => {
             this.entitiesReadyStatus.grenade = true;
             this.reset();
@@ -137,7 +125,7 @@ export default class MainScene extends Phaser.Scene {
     private reset(): void {
         if (this.entitiesReadyStatus.grenade && this.entitiesReadyStatus.enemy) {
             this.gameState = GameStates.Ready;
-            this.uiView.reset();
+            this.uiView.resetTimer();
             // console.log("ready!");
         }
     }
@@ -145,7 +133,7 @@ export default class MainScene extends Phaser.Scene {
     private initUIView(): void {
         this.uiView = new UIView(this);
         this.add.existing(this.uiView);
-        // if (this.playerController) this.uiView.positionThrowHelper(this.playerController.getPlayerPosition());
+        if (this.playerController) this.uiView.setPlayerPosition(this.playerController.getPlayerPosition());
     }
 
     // private initForegroundView(): void {

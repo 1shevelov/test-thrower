@@ -1,31 +1,41 @@
+export enum PlayerEvents {
+    PointerDown = "PointerDown",
+    PointerUp = "PointerUp",
+}
+
 export class PlayerController {
-    private throwDirection: Phaser.GameObjects.Graphics;
-    private readonly throwDirectionLineStyle = {
-        width: 5,
-        color: 0x00ff00,
-        alpha: 1,
-    };
-    private readonly ThrowDirectionLength = 200;
-    private playerPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     private readonly playerPositionMult: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0.5, 0.9);
+    private playerPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
     private mainScene: Phaser.Scene;
+    private events = new Phaser.Events.EventEmitter();
 
     public constructor(scene: Phaser.Scene) {
         this.mainScene = scene;
         this.init();
     }
 
-    // while player aims
-    public updateDirection(pointer: Phaser.Input.Pointer): void {
-        const angle = Phaser.Math.Angle.Between(this.playerPosition.x, this.playerPosition.y, pointer.x, pointer.y);
-        if (angle < 0 && angle > -Math.PI) {
-            // while pointer position is between the player position and a target
-            this.throwDirection.clear();
-            const x = this.playerPosition.x + this.ThrowDirectionLength * Math.cos(angle);
-            const y = this.playerPosition.y + this.ThrowDirectionLength * Math.sin(angle);
-            this.drawThrowDirection(x, y);
+    public holdingGrenade(
+        maxHoldDuration: number,
+        uiUpdate: (timePart: number, pointerPos: Phaser.Math.Vector2) => void,
+    ): void {
+        const pointer: Phaser.Input.Pointer = this.mainScene.input.activePointer;
+        if (
+            // check if pointer is within the game area
+            pointer.x > 0 &&
+            pointer.x < this.mainScene.scale.width &&
+            pointer.y > 0 &&
+            pointer.y < this.mainScene.scale.height &&
+            pointer.isDown
+        ) {
+            // release the grenade if holding for too long
+            if (pointer.getDuration() >= maxHoldDuration) this.events.emit(PlayerEvents.PointerUp, pointer);
+            uiUpdate(pointer.getDuration() / maxHoldDuration, new Phaser.Math.Vector2(pointer.x, pointer.y));
         }
+    }
+
+    public getEvents(): Phaser.Events.EventEmitter {
+        return this.events;
     }
 
     public getPlayerPosition(): Phaser.Math.Vector2 {
@@ -37,17 +47,11 @@ export class PlayerController {
         this.playerPosition.x = width * this.playerPositionMult.x;
         this.playerPosition.y = height * this.playerPositionMult.y;
 
-        this.drawThrowDirection(this.playerPosition.x, this.playerPosition.y - this.ThrowDirectionLength);
-    }
-
-    // show line in the direction of the pointer
-    private drawThrowDirection(endPosX: number, endPosY: number): void {
-        this.throwDirection = this.mainScene.add.graphics();
-        this.throwDirection.lineStyle(
-            this.throwDirectionLineStyle.width,
-            this.throwDirectionLineStyle.color,
-            this.throwDirectionLineStyle.alpha,
-        );
-        this.throwDirection.lineBetween(this.playerPosition.x, this.playerPosition.y, endPosX, endPosY);
+        this.mainScene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+            this.events.emit(PlayerEvents.PointerDown, pointer);
+        });
+        this.mainScene.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+            this.events.emit(PlayerEvents.PointerUp, pointer);
+        });
     }
 }

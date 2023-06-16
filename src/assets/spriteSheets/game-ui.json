@@ -5,7 +5,7 @@
 			"format": "RGBA8888",
 			"size": {
 				"w": 406,
-				"h": 199
+				"h": 264
 			},
 			"scale": 1,
 			"frames": [
@@ -73,6 +73,27 @@
 					}
 				},
 				{
+					"filename": "pointer.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 10,
+						"h": 102
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 10,
+						"h": 102
+					},
+					"frame": {
+						"x": 3,
+						"y": 159,
+						"w": 10,
+						"h": 102
+					}
+				},
+				{
 					"filename": "runner.png",
 					"rotated": false,
 					"trimmed": false,
@@ -87,7 +108,7 @@
 						"h": 37
 					},
 					"frame": {
-						"x": 3,
+						"x": 19,
 						"y": 159,
 						"w": 4,
 						"h": 37
